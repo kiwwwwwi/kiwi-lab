@@ -8,7 +8,7 @@ metadata:
 spec:
   generators:
     - git:
-        repoURL: git@github-personal:kiwwwwwi/kiwi-lab.git
+        repoURL: git@github.com:kiwwwwwi/kiwi-lab.git
         revision: main
         directories:
           - path: strimzi
@@ -29,7 +29,7 @@ spec:
     spec:
       project: kiwi-lab
       source:
-        repoURL: git@github-personal:kiwwwwwi/kiwi-lab.git
+        repoURL: git@github.com:kiwwwwwi/kiwi-lab.git
         path: "{{ path }}"
       destination:
         server: https://kubernetes.default.svc
