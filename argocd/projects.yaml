@@ -10,7 +10,7 @@ spec:
   sourceRepos:
     - '*'
   destinations:
-    - namespace: project1
+    - namespace: '*'
       server: '*'
   clusterResourceWhitelist:
     - group: '*'
