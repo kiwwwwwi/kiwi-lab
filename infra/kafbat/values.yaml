@@ -25,7 +25,7 @@ yamlApplicationConfig:
         kafkaConnect:
           - name: local-connect
             address: http://debezium-mysql-shared-connect-api:8083
-        schemaRegistry: http://schema-registry-cp-schema-registry:8081
+        schemaRegistry: http://schema-registry:8081
 
 # yamlApplicationConfigConfigMap:  # ConfigMap에서 설정을 읽어올 때 사용
 #   keyName: config.yml
