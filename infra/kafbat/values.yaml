@@ -21,7 +21,7 @@ yamlApplicationConfig:
   kafka:
     clusters:
       - name: local-cdc
-        bootstrapServers: kafka:9092
+        bootstrapServers: kafka-kafka-bootstrap:9092
         kafkaConnect:
           - name: local-connect
             address: http://debezium-mysql-shared-connect-api:8083
