@@ -1,4 +1,4 @@
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: KafkaNodePool
 metadata:
   name: combined
@@ -14,8 +14,67 @@ spec:
     type: persistent-claim
     size: 10Gi
     deleteClaim: false
+    # class: standard          # StorageClass 지정 (생략 시 기본값)
+  resources:
+    requests:
+      memory: 2Gi
+      cpu: "500m"
+    limits:
+      memory: 2Gi
+      cpu: "1000m"
+  # jvmOptions:
+  #   -Xms: 1024m
+  #   -Xmx: 1024m
+  #   -XX:
+  #     UseG1GC: "true"
+  #   gcLoggingEnabled: false
+  #   javaSystemProperties:
+  #     - name: ""
+  #       value: ""
+  # template:
+  #   pod:
+  #     metadata:
+  #       labels: {}
+  #       annotations: {}
+  #     affinity: {}            # 파드 배치 규칙 (멀티 노드)
+  #     tolerations: []         # 테인트 허용 (멀티 노드)
+  #     topologySpreadConstraints: []  # 파드 분산 배치 (멀티 노드)
+  #     priorityClassName: ""
+  #     schedulerName: ""
+  #     securityContext: {}
+  #     terminationGracePeriodSeconds: 30
+  #     imagePullSecrets: []
+  #     enableServiceLinks: false
+  #     hostAliases: []
+  #     hostUsers: true
+  #     tmpDirSizeLimit: 100Mi
+  #     dnsPolicy: ClusterFirst
+  #     dnsConfig: {}
+  #     volumes: []             # 추가 볼륨 마운트
+  #   kafkaContainer:
+  #     env: []                 # 추가 환경 변수
+  #     securityContext: {}
+  #     volumeMounts: []
+  #   initContainer:
+  #     env: []
+  #     securityContext: {}
+  #     volumeMounts: []
+  #   persistentVolumeClaim:
+  #     metadata:
+  #       labels: {}
+  #       annotations: {}
+  #   perPodService:
+  #     metadata:
+  #       labels: {}
+  #       annotations: {}
+  #   perPodRoute:              # OpenShift Route 사용 시
+  #     metadata: {}
+  #   perPodIngress:
+  #     metadata: {}
+  #   podSet:
+  #     metadata: {}
 ---
-apiVersion: kafka.strimzi.io/v1beta2
+apiVersion: kafka.strimzi.io/v1
 kind: Kafka
 metadata:
   name: kafka
@@ -27,11 +86,36 @@ spec:
   kafka:
     version: 4.1.0
     metadataVersion: 4.1-IV0
+    # image: ""                # 커스텀 이미지 사용 시 (기본값: Strimzi 공식 이미지)
+    # brokerRackInitImage: ""  # rack 초기화 컨테이너 이미지
     listeners:
       - name: plain
         port: 9092
         type: internal
         tls: false
+        # authentication:
+        #   type: scram-sha-512  # tls, scram-sha-256, scram-sha-512, oauth
+        # networkPolicyPeers: [] # 접근 허용할 네임스페이스/파드 셀렉터
+        # configuration:
+        #   maxConnections: 100
+        #   maxConnectionCreationRate: 10
+        #   useServiceDnsDomain: false
+        #   publishNotReadyAddresses: false
+        #   ipFamilies: []
+        #   ipFamilyPolicy: ""
+      # - name: tls
+      #   port: 9093
+      #   type: internal
+      #   tls: true
+      # - name: external
+      #   port: 9094
+      #   type: nodeport         # nodeport, loadbalancer, ingress, route, cluster-ip
+      #   tls: false
+      #   configuration:
+      #     preferredNodePortAddressType: InternalDNS
+      #     externalTrafficPolicy: Local
+      #     loadBalancerSourceRanges: []
+      #     allocateLoadBalancerNodePorts: true
     config:
       offsets.topic.replication.factor: 1
       transaction.state.log.replication.factor: 1
@@ -40,13 +124,242 @@ spec:
       min.insync.replicas: 1
       auto.create.topics.enable: "true"
       group.initial.rebalance.delay.ms: 0
-    resources:
-      requests:
-        memory: 2Gi
-        cpu: "500m"
-      limits:
-        memory: 2Gi
-        cpu: "1000m"
+      # log.retention.hours: 168
+      # log.segment.bytes: 1073741824
+      # num.partitions: 1
+      # message.max.bytes: 1048576
+    # authorization:
+    #   type: simple              # simple, opa, keycloak, custom
+    #   superUsers:
+    #     - admin
+    #   supportsAdminApi: true
+    #   authorizerClass: ""       # type: custom 일 때 클래스 지정
+    # rack:                       # 멀티존 HA
+    #   topologyKey: topology.kubernetes.io/zone
+    # quotas:
+    #   type: kafka               # kafka, strimzi
+    #   producerByteRate: 1048576
+    #   consumerByteRate: 2097152
+    #   requestPercentage: 55
+    #   controllerMutationRate: 10
+    #   excludedPrincipals: []
+    #   minAvailableBytesPerVolume: 0
+    #   minAvailableRatioPerVolume: 0
+    # jvmOptions:
+    #   -Xms: 1024m
+    #   -Xmx: 1024m
+    #   -XX:
+    #     UseG1GC: "true"
+    #   gcLoggingEnabled: false
+    #   javaSystemProperties: []
+    # jmxOptions:                  # JMX 포트 노출 (모니터링 툴 연동)
+    #   authentication:
+    #     type: password
+    # logging:
+    #   type: inline               # inline, external
+    #   loggers:
+    #     kafka.root.logger.level: INFO
+    #   valueFrom:                 # type: external 일 때 ConfigMap 참조
+    #     configMapKeyRef:
+    #       name: ""
+    #       key: ""
+    # livenessProbe:
+    #   initialDelaySeconds: 15
+    #   periodSeconds: 10
+    #   timeoutSeconds: 5
+    #   failureThreshold: 3
+    #   successThreshold: 1
+    # readinessProbe:
+    #   initialDelaySeconds: 15
+    #   periodSeconds: 10
+    #   timeoutSeconds: 5
+    #   failureThreshold: 3
+    #   successThreshold: 1
+    # metricsConfig:               # Prometheus 메트릭 수집
+    #   type: jmxPrometheusExporter
+    #   valueFrom:
+    #     configMapKeyRef:
+    #       name: kafka-metrics
+    #       key: kafka-metrics-config.yml
+    # tieredStorage:               # S3 등 원격 스토리지 계층화
+    #   type: custom
+    #   remoteStorageManager:
+    #     className: ""
+    #     classPath: ""
+    #     config: {}
+    # template:
+    #   pod:
+    #     metadata: {}
+    #     affinity: {}
+    #     tolerations: []
+    #     topologySpreadConstraints: []
+    #     priorityClassName: ""
+    #     schedulerName: ""
+    #     securityContext: {}
+    #     terminationGracePeriodSeconds: 30
+    #     imagePullSecrets: []
+    #     enableServiceLinks: false
+    #     hostAliases: []
+    #     tmpDirSizeLimit: 100Mi
+    #     dnsPolicy: ClusterFirst
+    #     dnsConfig: {}
+    #     volumes: []
+    #   kafkaContainer:
+    #     env: []
+    #     securityContext: {}
+    #     volumeMounts: []
+    #   initContainer:
+    #     env: []
+    #     securityContext: {}
+    #     volumeMounts: []
+    #   bootstrapService:
+    #     metadata: {}
+    #     ipFamilies: []
+    #     ipFamilyPolicy: ""
+    #   brokersService:
+    #     metadata: {}
+    #     ipFamilies: []
+    #     ipFamilyPolicy: ""
+    #   externalBootstrapService:
+    #     metadata: {}
+    #   perPodService:
+    #     metadata: {}
+    #   externalBootstrapRoute:
+    #     metadata: {}
+    #   perPodRoute:
+    #     metadata: {}
+    #   externalBootstrapIngress:
+    #     metadata: {}
+    #   perPodIngress:
+    #     metadata: {}
+    #   persistentVolumeClaim:
+    #     metadata: {}
+    #   podDisruptionBudget:       # 멀티 브로커 롤링 업데이트 시 최대 다운 파드 수
+    #     maxUnavailable: 1
+    #     metadata: {}
+    #   serviceAccount:
+    #     metadata: {}
+    #   clusterRoleBinding:
+    #     metadata: {}
+    #   jmxSecret:
+    #     metadata: {}
+    #   podSet:
+    #     metadata: {}
   entityOperator:
     topicOperator: {}
+    # topicOperator:
+    #   watchedNamespace: kiwi-lab
+    #   reconciliationIntervalMs: 120000
+    #   resources:
+    #     requests:
+    #       memory: 256Mi
+    #       cpu: "100m"
+    #     limits:
+    #       memory: 512Mi
+    #       cpu: "500m"
+    #   logging:
+    #     type: inline
+    #     loggers:
+    #       rootLogger.level: INFO
+    #   livenessProbe:
+    #     initialDelaySeconds: 10
+    #     periodSeconds: 30
+    #   readinessProbe:
+    #     initialDelaySeconds: 10
+    #     periodSeconds: 30
+    #   startupProbe:
+    #     initialDelaySeconds: 10
+    #     periodSeconds: 30
+    #   jvmOptions: {}
+    #   image: ""
     userOperator: {}
+    # userOperator:
+    #   watchedNamespace: kiwi-lab
+    #   reconciliationIntervalMs: 120000
+    #   secretPrefix: ""
+    #   resources:
+    #     requests:
+    #       memory: 256Mi
+    #       cpu: "100m"
+    #     limits:
+    #       memory: 512Mi
+    #       cpu: "500m"
+    #   logging:
+    #     type: inline
+    #     loggers:
+    #       rootLogger.level: INFO
+    #   livenessProbe:
+    #     initialDelaySeconds: 10
+    #     periodSeconds: 30
+    #   readinessProbe:
+    #     initialDelaySeconds: 10
+    #     periodSeconds: 30
+    #   jvmOptions: {}
+    #   image: ""
+  # kafkaExporter:                 # 컨슈머 랙 모니터링 (Grafana 연동)
+  #   topicRegex: ".*"
+  #   topicExcludeRegex: ""
+  #   groupRegex: ".*"
+  #   groupExcludeRegex: ""
+  #   showAllOffsets: true
+  #   enableSaramaLogging: false
+  #   image: ""
+  #   resources:
+  #     requests:
+  #       memory: 128Mi
+  #       cpu: "100m"
+  #     limits:
+  #       memory: 256Mi
+  #       cpu: "500m"
+  #   logging:
+  #     type: inline
+  #     loggers:
+  #       rootLogger.level: INFO
+  #   livenessProbe: {}
+  #   readinessProbe: {}
+  #   template:
+  #     pod: {}
+  # cruiseControl:                 # 파티션 자동 재분배 (멀티 브로커)
+  #   config: {}
+  #   resources:
+  #     requests:
+  #       memory: 512Mi
+  #       cpu: "100m"
+  #     limits:
+  #       memory: 512Mi
+  #       cpu: "500m"
+  #   autoRebalance:
+  #     - mode: add-brokers
+  #     - mode: remove-brokers
+  #   brokerCapacity:
+  #     cpu: "1"
+  #     inboundNetwork: 10000KB/s
+  #     outboundNetwork: 10000KB/s
+  #   apiUsers:
+  #     type: hashLoginService
+  #     valueFrom:
+  #       secretKeyRef:
+  #         name: ""
+  #         key: ""
+  #   jvmOptions: {}
+  #   logging: {}
+  #   livenessProbe: {}
+  #   readinessProbe: {}
+  #   metricsConfig: {}
+  #   image: ""
+  #   template:
+  #     pod: {}
+  # clusterCa:
+  #   generateCertificateAuthority: true
+  #   validityDays: 365
+  #   renewalDays: 30
+  #   generateSecretOwnerReference: true
+  #   certificateExpirationPolicy: renew-certificate  # renew-certificate, replace-key
+  # clientsCa:
+  #   generateCertificateAuthority: true
+  #   validityDays: 365
+  #   renewalDays: 30
+  #   generateSecretOwnerReference: true
+  #   certificateExpirationPolicy: renew-certificate
+  # maintenanceTimeWindows:        # 인증서 갱신 허용 시간대 (cron 형식)
+  #   - "* * 8-10 * * ?"

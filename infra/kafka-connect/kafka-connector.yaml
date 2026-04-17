@@ -61,7 +61,7 @@ spec:
     transforms.unwrap.delete.handling.mode: "rewrite"
     transforms.unwrap.add.fields: "source.version,source.connector,source.name,source.ts_ms,source.snapshot,source.db,source.sequence,source.ts_us,source.ts_ns,source.table,source.server_id,source.gtid,source.file,source.pos,source.row,source.thread,source.query,op,ts_ms,ts_us,ts_ns"
     schema.history.internal.kafka.topic: "__debezium.mysql.shared.schema-history"
-    schema.history.internal.kafka.bootstrap.servers: "kafka:9092"
+    schema.history.internal.kafka.bootstrap.servers: "kafka-kafka-bootstrap:9092"
     schema.history.internal.kafka.recovery.poll.interval.ms: "100"
     schema.history.internal.kafka.query.timeout.ms: "3000"
     schema.history.internal.kafka.create.timeout.ms: "30000"

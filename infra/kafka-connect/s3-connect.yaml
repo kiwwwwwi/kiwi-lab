@@ -19,7 +19,7 @@ spec:
   version: 4.2.0
   replicas: 1
   image: s3-connect:kafka-4.2.0
-  bootstrapServers: "kafka:9092"
+  bootstrapServers: "kafka-kafka-bootstrap:9092"
   groupId: s3-sink
   configStorageTopic: __s3-sink-configs
   statusStorageTopic: __s3-sink-status

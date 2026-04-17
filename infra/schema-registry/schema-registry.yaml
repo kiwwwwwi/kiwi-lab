@@ -25,7 +25,7 @@ spec:
             - name: SCHEMA_REGISTRY_LISTENERS
               value: "http://0.0.0.0:8081"
             - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
-              value: "kafka:9092"
+              value: "kafka-kafka-bootstrap:9092"
             - name: SCHEMA_REGISTRY_KAFKASTORE_TOPIC
               value: "_schemas"
             - name: SCHEMA_REGISTRY_KAFKASTORE_TOPIC_REPLICATION_FACTOR
