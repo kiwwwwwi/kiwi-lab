@@ -1,0 +1,23 @@
+# Strimzi Kafka 4.2.0 베이스 이미지에 Debezium MySQL 3.5.0 커넥터 추가
+FROM quay.io/strimzi/kafka:0.51.0-kafka-4.2.0
+USER root
+
+RUN mkdir -p /opt/kafka/plugins/debezium-mysql-connector
+
+# Maven Central에서 Debezium MySQL 커넥터 플러그인 다운로드 (jar + 의존성 포함)
+RUN curl -fsSL \
+    "https://repo1.maven.org/maven2/io/debezium/debezium-connector-mysql/3.5.0.Final/debezium-connector-mysql-3.5.0.Final-plugin.tar.gz" \
+    | tar -xzf - -C /opt/kafka/plugins/debezium-mysql-connector --strip-components=1
+
+# Confluent Avro Converter — confluent-hub install 방식으로 설치
+# (ZIP 패키지에 META-INF/services 포함 → Kafka 4.x 플러그인 스캐너가 자동 인식)
+RUN curl -fsSL "https://client.hub.confluent.io/confluent-hub-client-latest.tar.gz" \
+      | tar -xzf - -C /tmp/ && \
+    touch /tmp/worker.properties && \
+    /tmp/bin/confluent-hub install --no-prompt \
+      confluentinc/kafka-connect-avro-converter:8.2.0 \
+      --component-dir /opt/kafka/plugins \
+      --worker-configs /tmp/worker.properties && \
+    rm -rf /tmp/bin /tmp/lib /tmp/share /tmp/worker.properties
+
+USER 1001

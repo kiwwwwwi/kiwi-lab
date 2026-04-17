@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  name: kiwi-lab
+  namespace: argocd
+spec:
+  generators:
+    - git:
+        repoURL: git@github-personal:kiwwwwwi/kiwi-lab.git
+        revision: main
+        directories:
+          - path: strimzi
+          - path: kafka
+          - path: schema-registry
+          - path: kafka-connect
+          - path: kafbat
+          - path: minio
+          - path: mysql
+        requeueAfterSeconds: 20
+  syncPolicy: {}
+  template:
+    metadata:
+      annotations:
+        argocd.argoproj.io/manifest-generate-paths: .
+      name: "{{ path.basename }}"
+      namespace: argocd
+    spec:
+      project: kiwi-lab
+      source:
+        repoURL: git@github-personal:kiwwwwwi/kiwi-lab.git
+        path: "{{ path }}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: kiwi-lab
+      syncPolicy:
+        automated:
+          allowEmpty: true
+          prune: false
+          selfHeal: true
+        syncOptions:
+          - RespectIgnoreDifferences=true
+          - CreateNamespace=true

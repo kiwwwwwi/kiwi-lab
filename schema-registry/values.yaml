@@ -1,0 +1,133 @@
+# cp-helm-charts 전체 차트 중 schema-registry만 활성화
+cp-zookeeper:
+  enabled: false
+cp-kafka:
+  enabled: false
+cp-kafka-connect:
+  enabled: false
+cp-kafka-rest:
+  enabled: false
+cp-ksql-server:
+  enabled: false
+cp-control-center:
+  enabled: false
+
+cp-schema-registry:
+  # Default values for cp-schema-registry.
+  # This is a YAML-formatted file.
+  # Declare variables to be passed into your templates.
+
+  ## ------------------------------------------------------
+  ## Schema Registry
+  ## ------------------------------------------------------
+
+  replicaCount: 1
+
+  image: confluentinc/cp-schema-registry
+  imageTag: 8.2.0
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets:
+
+  servicePort: 8081
+  heapOptions: "-Xms512M -Xmx512M"
+
+  kafka:
+    bootstrapServers: "kafka:9092"
+
+  ## Schema Registry Configuration Overrides
+  ## ref: https://docs.confluent.io/platform/current/schema-registry/installation/config.html
+  ## 키의 "."은 "_"로 변환되어 환경변수로 주입됩니다.
+  ## 예) kafkastore.topic → SCHEMA_REGISTRY_KAFKASTORE_TOPIC
+  configurationOverrides:
+    ## -------------------------------------------------------
+    ## High Importance
+    ## -------------------------------------------------------
+    # listeners: "http://0.0.0.0:8081"                    # API 수신 주소
+    # kafkastore.topic: "_schemas"                        # 스키마 저장 토픽명
+    # kafkastore.topic.replication.factor: "3"            # 스키마 토픽 복제 팩터
+    # schema.compatibility.level: "backward"              # 호환성 정책 (none/backward/forward/full + _transitive 변형)
+    # response.mediatype.default: "application/vnd.schemaregistry.v1+json"
+    # exporter.config.topic: "_exporter_configs"
+    # exporter.state.topic: "_exporter_states"
+
+    ## -------------------------------------------------------
+    ## Medium Importance
+    ## -------------------------------------------------------
+    # kafkastore.init.timeout.ms: "60000"                 # 초기화 및 토픽 생성 타임아웃
+    # kafkastore.timeout.ms: "500"                        # Kafka 저장소 작업 타임아웃
+    # kafkastore.security.protocol: "PLAINTEXT"           # PLAINTEXT / SASL_PLAINTEXT / SSL / SASL_SSL
+    # leader.eligibility: "true"                          # 리더 선출 참여 여부
+    # kafkastore.group.id: ""                             # KafkaStore consumer group.id 오버라이드
+
+    ## SSL (kafkastore)
+    # kafkastore.ssl.keystore.location: ""
+    # kafkastore.ssl.keystore.password: ""
+    # kafkastore.ssl.key.password: ""
+    # kafkastore.ssl.truststore.location: ""
+    # kafkastore.ssl.truststore.password: ""
+    # kafkastore.ssl.keystore.type: "JKS"
+    # kafkastore.ssl.truststore.type: "JKS"
+    # kafkastore.ssl.protocol: "TLSv1.3"
+    # kafkastore.ssl.enabled.protocols: "TLSv1.2, TLSv1.3"
+    # kafkastore.ssl.endpoint.identification.algorithm: "https"
+
+    ## SASL / Kerberos (kafkastore)
+    # kafkastore.sasl.mechanism: "GSSAPI"
+    # kafkastore.sasl.kerberos.service.name: ""
+    # kafkastore.sasl.kerberos.kinit.cmd: "/usr/bin/kinit"
+    # kafkastore.sasl.kerberos.min.time.before.relogin: "60000"
+
+    ## SSL (Schema Registry API)
+    # ssl.keystore.location: ""
+    # ssl.keystore.password: ""
+    # ssl.key.password: ""
+
+    ## -------------------------------------------------------
+    ## Low Importance
+    ## -------------------------------------------------------
+    # access.control.allow.origin: ""                     # CORS 허용 출처
+    # access.control.allow.methods: ""                    # CORS 허용 메서드
+    # debug: "false"                                      # 디버그 로깅
+    # schema.registry.group.id: "schema-registry"        # 클러스터 식별자
+    # inter.instance.protocol: "http"                     # 인스턴스 간 통신 프로토콜
+    # shutdown.graceful.ms: "1000"                        # 종료 대기 시간
+    # host.http.connect.timeout.ms: "60000"
+    # http.read.timeout.ms: "60000"
+    # metrics.jmx.prefix: "kafka.schema.registry"
+    # schema.search.default.limit: "1000"
+    # subject.search.default.limit: "20000"
+    # proxy.host: ""
+    # proxy.port: ""
+
+  customEnv: {}
+
+  resources: {}
+    # limits:
+    #   cpu: 500m
+    #   memory: 1Gi
+    # requests:
+    #   cpu: 250m
+    #   memory: 512Mi
+
+  podAnnotations: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  securityContext:
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+    runAsNonRoot: true
+
+  jmx:
+    port: 5555
+
+  prometheus:
+    jmx:
+      enabled: true
+      image: solsson/kafka-prometheus-jmx-exporter@sha256
+      imageTag: 6f82e2b0464f50da8104acd7363fb9b995001ddff77d248379f8788e78946143
+      imagePullPolicy: IfNotPresent
+      port: 5556
+      resources: {}
