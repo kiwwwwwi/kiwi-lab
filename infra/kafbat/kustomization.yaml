@@ -4,15 +4,7 @@ kind: Kustomization
 helmCharts:
   - name: kafka-ui
     repo: https://kafbat.github.io/helm-charts
+    version: "1.6.3"
     releaseName: kafbat
     namespace: kiwi-lab
-    valuesInline:
-      yamlApplicationConfig:
-        kafka:
-          clusters:
-            - name: local-cdc
-              bootstrapServers: kafka:9092
-              kafkaConnect:
-                - name: local-connect
-                  address: http://debezium-mysql-shared-connect-api:8083
-              schemaRegistry: http://schema-registry-cp-schema-registry:8081
+    valuesFile: values.yaml
