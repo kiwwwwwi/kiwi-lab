@@ -11,13 +11,7 @@ spec:
         repoURL: git@github.com:kiwwwwwi/kiwi-lab.git
         revision: main
         directories:
-          - path: strimzi
-          - path: kafka
-          - path: schema-registry
-          - path: kafka-connect
-          - path: kafbat
-          - path: minio
-          - path: mysql
+          - path: infra/*
         requeueAfterSeconds: 20
   syncPolicy: {}
   template:
