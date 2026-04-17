@@ -2,7 +2,7 @@ apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnect
 metadata:
   name: debezium-mysql-shared
-  namespace: project1
+  namespace: kiwi-lab
   annotations:
     strimzi.io/use-connector-resources: "true"
 spec:

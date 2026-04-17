@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: minio-credentials
-  namespace: project1
+  namespace: kiwi-lab
 type: Opaque
 stringData:
   access-key: minioadmin
@@ -12,7 +12,7 @@ apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnect
 metadata:
   name: s3-sink
-  namespace: project1
+  namespace: kiwi-lab
   annotations:
     strimzi.io/use-connector-resources: "true"
 spec:

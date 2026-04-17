@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: minio
-  namespace: project1
+  namespace: kiwi-lab
 spec:
   replicas: 1
   selector:
@@ -39,7 +39,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: minio
-  namespace: project1
+  namespace: kiwi-lab
 spec:
   selector:
     app: minio
@@ -56,7 +56,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: minio-nodeport
-  namespace: project1
+  namespace: kiwi-lab
 spec:
   type: NodePort
   selector:
@@ -72,7 +72,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: minio-init
-  namespace: project1
+  namespace: kiwi-lab
 spec:
   template:
     spec:

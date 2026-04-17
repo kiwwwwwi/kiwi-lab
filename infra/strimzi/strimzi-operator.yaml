@@ -73,7 +73,7 @@ spec:
               mountPath: /opt/strimzi/custom-config/
           env:
             - name: STRIMZI_NAMESPACE
-              value: project1
+              value: kiwi-lab
             - name: STRIMZI_FULL_RECONCILIATION_INTERVAL_MS
               value: "120000"
             - name: STRIMZI_OPERATION_TIMEOUT_MS
@@ -2840,7 +2840,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: strimzi-operator
+    namespace: kiwi-lab
 roleRef:
   kind: ClusterRole
   name: strimzi-cluster-operator-namespaced
@@ -3015,7 +3015,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: strimzi-operator
+    namespace: kiwi-lab
 roleRef:
   kind: ClusterRole
   name: strimzi-cluster-operator-watched
@@ -3033,7 +3033,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: strimzi-operator
+    namespace: kiwi-lab
 roleRef:
   kind: ClusterRole
   name: strimzi-kafka-broker
@@ -13683,7 +13683,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: strimzi-operator
+    namespace: kiwi-lab
 roleRef:
   kind: ClusterRole
   name: strimzi-entity-operator
@@ -20010,7 +20010,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: strimzi-operator
+    namespace: kiwi-lab
 roleRef:
   kind: ClusterRole
   name: strimzi-kafka-client
@@ -32735,7 +32735,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: strimzi-operator
+    namespace: kiwi-lab
 roleRef:
   kind: ClusterRole
   name: strimzi-cluster-operator-leader-election
@@ -32751,7 +32751,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: strimzi-operator
+    namespace: kiwi-lab
 roleRef:
   kind: ClusterRole
   name: strimzi-cluster-operator-global

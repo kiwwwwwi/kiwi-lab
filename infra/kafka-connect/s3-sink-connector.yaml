@@ -2,7 +2,7 @@ apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnector
 metadata:
   name: s3-sink-test
-  namespace: project1
+  namespace: kiwi-lab
   labels:
     strimzi.io/cluster: s3-sink
 spec:

@@ -2,13 +2,13 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: strimzi-cluster-operator
-  namespace: project1
+  namespace: kiwi-lab
   labels:
     app: strimzi
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: strimzi-operator
+    namespace: kiwi-lab
 roleRef:
   kind: ClusterRole
   name: strimzi-cluster-operator-namespaced
@@ -18,13 +18,13 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: strimzi-cluster-operator-watched
-  namespace: project1
+  namespace: kiwi-lab
   labels:
     app: strimzi
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: strimzi-operator
+    namespace: kiwi-lab
 roleRef:
   kind: ClusterRole
   name: strimzi-cluster-operator-watched
@@ -34,13 +34,13 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: strimzi-cluster-operator-entity-operator-delegation
-  namespace: project1
+  namespace: kiwi-lab
   labels:
     app: strimzi
 subjects:
   - kind: ServiceAccount
     name: strimzi-cluster-operator
-    namespace: strimzi-operator
+    namespace: kiwi-lab
 roleRef:
   kind: ClusterRole
   name: strimzi-entity-operator
