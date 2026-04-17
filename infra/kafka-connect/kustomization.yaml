@@ -6,3 +6,4 @@ resources:
   - secret.yaml
   - kafka-connect.yaml
   - kafka-connector.yaml
+  - network-policy-allow-kafbat.yaml
