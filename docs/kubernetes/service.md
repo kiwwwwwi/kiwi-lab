@@ -2,11 +2,30 @@
 
 파드에 접근하는 고정된 진입점.
 
-파드는 죽었다 살아나면 IP가 바뀌는데, Service는 항상 같은 이름과 IP를 유지하면서 뒤에 있는 파드로 트래픽을 라우팅한다.
+파드는 죽었다 살아나면 IP가 바뀌는데, Service는 항상 같은 이름과 IP를 유지하면서 클라이언트가 파드 교체를 신경 쓰지 않아도 되게 한다.
 
+논리적 흐름 (개념):
 ```
 클라이언트 → Service(kafbat:80) → Pod(kafbat-ui)
 ```
+
+실제 패킷 흐름:
+```
+클라이언트 → ClusterIP:80 → [iptables NAT] → 파드 IP:포트
+```
+Service 오브젝트는 패킷 경로 위에 없다. iptables가 커널 레벨에서 목적지를 바꿔치기한다.
+
+## Service 오브젝트의 역할
+
+Service 오브젝트는 패킷 흐름에 직접 관여하지 않는다. 역할은 **선언**이다.
+
+```
+Service 생성
+  → kube-proxy가 감지 → iptables에 규칙 등록 (ClusterIP → 파드 IP)
+  → CoreDNS가 감지   → DNS에 이름 등록 (kafka → ClusterIP)
+```
+
+이후 실제 패킷이 흐를 때는 커널의 iptables와 CoreDNS가 처리한다. Service는 그 둘에게 설정을 지시하는 역할만 한다.
 
 ## 등록 위치
 
@@ -25,11 +44,13 @@ iptables: 10.96.x.x:80 → 172.17.0.5:8080 (파드 IP)
 파드가 죽고 새로 뜰 때 DNS 이름과 ClusterIP는 변하지 않고, kube-proxy가 iptables 규칙만 업데이트한다.
 
 ```
-1. 파드 죽음
-2. kube-proxy가 감지 → iptables에서 죽은 파드 IP 규칙 제거
-3. 새 파드 뜸
-4. kube-proxy가 감지 → iptables에 새 파드 IP 규칙 추가
+1. 파드 죽음 → Endpoint에서 해당 파드 IP 제거
+2. kube-proxy 감지 → iptables에서 죽은 파드 IP 규칙 제거
+3. 새 파드 뜸 → Endpoint에 새 파드 IP 추가
+4. kube-proxy 감지 → iptables에 새 파드 IP 규칙 등록
 ```
+
+kube-proxy 상세는 [kube-proxy.md](kube-proxy.md) 참고.
 
 클라이언트는 항상 같은 주소(kafbat:80)로 요청하면 되고, 파드 교체를 신경 쓸 필요가 없다.
 
