@@ -29,6 +29,21 @@ apiVersion: v1        # Pod, Service, ConfigMap 등
 apiVersion: apps/v1   # Deployment, StatefulSet 등
 ```
 
+## API Server URL 매핑
+
+`apiVersion`은 API Server의 엔드포인트 경로와 1:1로 매핑된다.
+
+```
+apiVersion: apps/v1  →  /apis/apps/v1/namespaces/.../deployments
+apiVersion: v1       →  /api/v1/namespaces/.../pods
+```
+
+그룹이 있으면 `/apis/그룹/버전/...`, 코어 리소스(`v1`)는 그룹 없이 `/api/버전/...` 경로를 사용한다.
+
+`kubectl apply` 시 kubectl이 이 경로로 API Server에 HTTPS 요청을 보내고, API Server가 `apiVersion + kind`를 보고 스펙을 검증한 뒤 etcd에 저장한다.
+
+실제 요청 URL은 `kubectl get pods -v 9`로 확인할 수 있다.
+
 ## 버전 성숙도
 
 ```

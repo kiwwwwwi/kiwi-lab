@@ -41,3 +41,22 @@ kubectl get pods
   ├── Scheduler           ← 파드를 어느 노드에 띄울지 결정
   └── Controller Manager  ← 파드 수 유지, 재시작 등 상태 관리
 ```
+
+## 통신 프로토콜
+
+```
+kubectl → API Server          : HTTPS (REST)
+API Server → etcd             : gRPC
+API Server → kubelet          : HTTPS
+kubelet / kube-proxy / CoreDNS → API Server : HTTPS (Watch)
+```
+
+API Server가 능동적으로 호출하는 건 etcd와 kubelet뿐이다.
+나머지 컴포넌트들은 API Server를 Watch하고 있다가 변경이 생기면 알아서 반응한다.
+
+```
+kube-proxy: "Service 변경되면 알려줘" (롱폴링)
+  → Service 변경 발생
+  → API Server가 push
+  → kube-proxy가 iptables 업데이트
+```
