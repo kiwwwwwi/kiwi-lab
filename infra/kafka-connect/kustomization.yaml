@@ -7,3 +7,5 @@ resources:
   - kafka-connect.yaml
   - kafka-connector.yaml
   - network-policy-allow-kafbat.yaml
+  - s3-connect.yaml
+  - s3-sink-connector.yaml
