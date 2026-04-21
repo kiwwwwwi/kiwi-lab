@@ -1,80 +1,20 @@
-cp-zookeeper:
-  enabled: false
-cp-kafka:
-  enabled: false
-cp-kafka-connect:
-  enabled: false
-cp-kafka-rest:
-  enabled: false
-cp-ksql-server:
-  enabled: false
-cp-control-center:
+replicaCount: 1
+
+kafka:
   enabled: false
 
-cp-schema-registry:
-  replicaCount: 1
+externalKafka:
+  brokers:
+    - PLAINTEXT://kafka-kafka-bootstrap:9092
+  listener:
+    protocol: PLAINTEXT
 
-  image: confluentinc/cp-schema-registry
-  imageTag: 8.2.0
-  imagePullPolicy: IfNotPresent
+avroCompatibilityLevel: backward
 
-  servicePort: 8081
-  heapOptions: "-Xms512M -Xmx512M"
-
-  kafka:
-    bootstrapServers: "PLAINTEXT://kafka-kafka-bootstrap:9092"
-
-  configurationOverrides:
-    ## -------------------------------------------------------
-    ## High Importance
-    ## -------------------------------------------------------
-    kafkastore.topic: "_schemas"                    # 스키마 저장 토픽명
-    kafkastore.topic.replication.factor: "1"        # 스키마 토픽 복제 팩터 (프로덕션: 3)
-    schema.compatibility.level: "BACKWARD"          # 호환성 정책 (NONE/BACKWARD/FORWARD/FULL + _TRANSITIVE 변형)
-    kafkastore.init.timeout.ms: "60000"             # Kafka 준비 전 SR 기동 시 재시도 타임아웃
-    # listeners: "http://0.0.0.0:8081"             # API 수신 주소
-    # kafkastore.security.protocol: "PLAINTEXT"    # PLAINTEXT / SASL_PLAINTEXT / SSL / SASL_SSL
-
-    ## -------------------------------------------------------
-    ## Medium Importance
-    ## -------------------------------------------------------
-    # kafkastore.timeout.ms: "500"                 # Kafka 저장소 작업 타임아웃
-    # kafkastore.group.id: ""                      # KafkaStore consumer group.id 오버라이드
-    # leader.eligibility: "true"                   # 리더 선출 참여 여부 (SR 다중화 시)
-    # schema.registry.group.id: "schema-registry"  # SR 클러스터 식별자 (다중화 시)
-    # inter.instance.protocol: "http"              # SR 인스턴스 간 통신 프로토콜
-
-    ## SSL (kafkastore)
-    # kafkastore.ssl.keystore.location: ""
-    # kafkastore.ssl.keystore.password: ""
-    # kafkastore.ssl.key.password: ""
-    # kafkastore.ssl.truststore.location: ""
-    # kafkastore.ssl.truststore.password: ""
-    # kafkastore.ssl.protocol: "TLSv1.3"
-
-    ## SASL (kafkastore)
-    # kafkastore.sasl.mechanism: "SCRAM-SHA-512"
-    # kafkastore.sasl.jaas.config: ""
-
-    ## -------------------------------------------------------
-    ## Low Importance
-    ## -------------------------------------------------------
-    # access.control.allow.origin: ""              # CORS 허용 출처
-    # access.control.allow.methods: ""             # CORS 허용 메서드
-    # debug: "false"                               # 디버그 로깅
-    # shutdown.graceful.ms: "1000"                 # 종료 대기 시간
-    # schema.search.default.limit: "1000"          # 스키마 검색 기본 limit
-    # subject.search.default.limit: "20000"        # subject 검색 기본 limit
-    # metrics.jmx.prefix: "kafka.schema.registry"
-
-  resources:
-    requests:
-      memory: 512Mi
-      cpu: 250m
-    limits:
-      memory: 1Gi
-      cpu: 500m
-
-  prometheus:
-    jmx:
-      enabled: false
+resources:
+  requests:
+    memory: 512Mi
+    cpu: 250m
+  limits:
+    memory: 1Gi
+    cpu: 500m
