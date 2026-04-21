@@ -1,7 +1,8 @@
 # Stage 1: Confluent Hub에서 S3 커넥터 설치
 FROM confluentinc/cp-kafka-connect:8.2.0 AS connector-builder
 
-RUN confluent-hub install --no-prompt confluentinc/kafka-connect-s3:12.1.3
+RUN confluent-hub install --no-prompt confluentinc/kafka-connect-s3:12.1.3 && \
+    confluent-hub install --no-prompt confluentinc/kafka-connect-avro-converter:7.9.0
 
 # Stage 2: Strimzi 베이스 이미지에 플러그인 복사
 FROM quay.io/strimzi/kafka:0.51.0-kafka-4.2.0
@@ -14,5 +15,8 @@ COPY --from=connector-builder \
     /usr/share/confluent-hub-components/confluentinc-kafka-connect-s3 \
     /opt/kafka/plugins/confluentinc-kafka-connect-s3
 
-USER 1001
+COPY --from=connector-builder \
+    /usr/share/confluent-hub-components/confluentinc-kafka-connect-avro-converter \
+    /opt/kafka/plugins/confluentinc-kafka-connect-avro-converter
 
+USER 1001

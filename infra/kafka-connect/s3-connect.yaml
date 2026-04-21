@@ -49,10 +49,10 @@ spec:
     config.providers.env.class: org.apache.kafka.common.config.provider.EnvVarConfigProvider
   resources:
     requests:
-      memory: 256Mi
+      memory: 512Mi
       cpu: "100m"
     limits:
-      memory: 512Mi
+      memory: 1Gi
       cpu: "500m"
   livenessProbe:
     initialDelaySeconds: 60
