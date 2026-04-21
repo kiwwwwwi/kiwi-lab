@@ -1,10 +1,5 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-helmCharts:
-  - name: schema-registry
-    repo: https://charts.bitnami.com/bitnami
-    version: 26.0.5
-    releaseName: schema-registry
-    namespace: kiwi-lab
-    valuesFile: values.yaml
+resources:
+  - schema-registry.yaml
