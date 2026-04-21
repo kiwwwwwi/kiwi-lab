@@ -1,0 +1,7 @@
+FROM confluentinc/cp-schema-registry:8.2.0
+
+USER root
+RUN curl -fsSL -o /usr/share/java/schema-registry/aws-msk-iam-auth-all.jar \
+    "https://github.com/aws/aws-msk-iam-auth/releases/download/v2.3.5/aws-msk-iam-auth-2.3.5-all.jar"
+
+USER 1000

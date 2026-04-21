@@ -19,7 +19,7 @@ spec:
     database.port: "3306"
     database.protocol: "jdbc:mysql"
     database.user: "${env:MYSQL_USER}"
-    decimal.handling.mode: "string"
+    decimal.handling.mode: "precise"
     include.query: "false"
     include.schema.changes: "true"
     include.schema.comments: "false"
