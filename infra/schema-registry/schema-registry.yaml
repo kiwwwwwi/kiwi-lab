@@ -4,7 +4,7 @@ metadata:
   name: schema-registry
   namespace: kiwi-lab
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: schema-registry
@@ -22,18 +22,18 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
-            - name: SCHEMA_REGISTRY_LISTENERS
-              value: "http://0.0.0.0:8081"
             - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
               value: "PLAINTEXT://kafka-kafka-bootstrap:9092"
             - name: SCHEMA_REGISTRY_KAFKASTORE_TOPIC
               value: "_schemas"
             - name: SCHEMA_REGISTRY_KAFKASTORE_TOPIC_REPLICATION_FACTOR
-              value: "1"
-            - name: SCHEMA_REGISTRY_SCHEMA_COMPATIBILITY_LEVEL
-              value: "BACKWARD"
+              value: "3"
             - name: SCHEMA_REGISTRY_KAFKASTORE_INIT_TIMEOUT_MS
               value: "60000"
+            - name: SCHEMA_REGISTRY_LISTENERS
+              value: "http://0.0.0.0:8081"
+            - name: SCHEMA_REGISTRY_SCHEMA_COMPATIBILITY_LEVEL
+              value: "backward_transitive"
           ports:
             - containerPort: 8081
               name: http
@@ -46,9 +46,9 @@ spec:
             timeoutSeconds: 5
           readinessProbe:
             httpGet:
-              path: /subjects
+              path: /
               port: http
-            initialDelaySeconds: 20
+            initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
           resources:
