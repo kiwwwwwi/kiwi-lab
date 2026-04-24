@@ -32,6 +32,7 @@ spec:
     partition.duration.ms: "600000"
     path.format: "'ds'=YYYY-MM-dd-HH-mm"
     timezone: "UTC"
+    locale: "en_US"
     # Sink
     topics.regex: "debezium.mysql.local.testdb.*"
     errors.tolerance: "none"
