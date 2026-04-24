@@ -38,8 +38,3 @@ spec:
     errors.tolerance: "none"
     errors.log.enable: "true"
     errors.log.include.messages: "true"
-    # Table name routing
-    transforms: "route"
-    transforms.route.type: "org.apache.kafka.connect.transforms.RegexRouter"
-    transforms.route.regex: "debezium\\.mysql\\.([^.]+)\\.([^.]+)\\.([^.]+)"
-    transforms.route.replacement: "$3"
