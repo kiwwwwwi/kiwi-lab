@@ -4,8 +4,8 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - secret.yaml
-  - kafka-connect.yaml
-  - kafka-connector.yaml
+  - debezium-connect.yaml
+  - debezium-connector.yaml
   - network-policy-allow-kafbat.yaml
-  - s3-connect.yaml
+  - s3-sink-connect.yaml
   - s3-sink-connector.yaml

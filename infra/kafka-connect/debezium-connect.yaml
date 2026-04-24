@@ -1,7 +1,7 @@
 apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnect
 metadata:
-  name: debezium-mysql-shared
+  name: debezium-mysql-local
   namespace: kiwi-lab
   annotations:
     strimzi.io/use-connector-resources: "true"
@@ -10,10 +10,10 @@ spec:
   replicas: 1
   image: debezium-connect:3.5.0-kafka-4.2.0-v3
   bootstrapServers: "kafka-kafka-bootstrap:9092"
-  groupId: debezium-mysql-shared
-  configStorageTopic: __debezium-mysql-shared-configs
-  statusStorageTopic: __debezium-mysql-shared-status
-  offsetStorageTopic: __debezium-mysql-shared-offsets
+  groupId: debezium-mysql-local
+  configStorageTopic: __debezium-mysql-local-configs
+  statusStorageTopic: __debezium-mysql-local-status
+  offsetStorageTopic: __debezium-mysql-local-offsets
   template:
     connectContainer:
       env:

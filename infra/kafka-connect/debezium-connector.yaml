@@ -1,10 +1,10 @@
 apiVersion: kafka.strimzi.io/v1
 kind: KafkaConnector
 metadata:
-  name: debezium-mysql-shared
+  name: debezium-mysql-local
   namespace: kiwi-lab
   labels:
-    strimzi.io/cluster: debezium-mysql-shared
+    strimzi.io/cluster: debezium-mysql-local
 spec:
   class: io.debezium.connector.mysql.MySqlConnector
   tasksMax: 1
@@ -26,9 +26,9 @@ spec:
     inconsistent.schema.handling.mode: "fail"
     time.precision.mode: "connect"
     tombstones.on.delete: "false"
-    topic.prefix: "debezium.mysql.shared"
-    database.include.list: "beauty_db"
-    table.include.list: "beauty_db.consultation,beauty_db.push_info,beauty_db.chat_room_stats,beauty_db.page,beauty_db.hospital"
+    topic.prefix: "debezium.mysql.local"
+    database.include.list: "testdb"
+    table.include.list: "testdb.orders"
     connect.keep.alive: "true"
     database.query.timeout.ms: "600000"
     database.ssl.mode: "preferred"
@@ -60,7 +60,7 @@ spec:
     transforms.unwrap.type: "io.debezium.transforms.ExtractNewRecordState"
     transforms.unwrap.delete.handling.mode: "rewrite"
     transforms.unwrap.add.fields: "source.version,source.connector,source.name,source.ts_ms,source.snapshot,source.db,source.sequence,source.ts_us,source.ts_ns,source.table,source.server_id,source.gtid,source.file,source.pos,source.row,source.thread,source.query,op,ts_ms,ts_us,ts_ns"
-    schema.history.internal.kafka.topic: "__debezium.mysql.shared.schema-history"
+    schema.history.internal.kafka.topic: "__debezium.mysql.local.schema-history"
     schema.history.internal.kafka.bootstrap.servers: "kafka-kafka-bootstrap:9092"
     schema.history.internal.kafka.recovery.poll.interval.ms: "100"
     schema.history.internal.kafka.query.timeout.ms: "3000"
@@ -69,4 +69,3 @@ spec:
     schema.history.internal.skip.unparseable.ddl: "false"
     schema.history.internal.store.only.captured.tables.ddl: "false"
     schema.history.internal.store.only.captured.databases.ddl: "false"
-
