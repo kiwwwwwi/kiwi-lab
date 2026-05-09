@@ -24,7 +24,7 @@ spec:
     include.schema.changes: "true"
     include.schema.comments: "false"
     inconsistent.schema.handling.mode: "fail"
-    time.precision.mode: "adaptive_time_microseconds"
+    time.precision.mode: "connect"
     tombstones.on.delete: "false"
     topic.prefix: "debezium.mysql.local"
     database.include.list: "testdb"
